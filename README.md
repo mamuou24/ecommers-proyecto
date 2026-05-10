@@ -1,3 +1,10 @@
+# Mi Entrega: Fullstack Challenge - E-commerce
+
+### Información Personal y del Proyecto
+- **Autor:** [Manuela Ortega Usuga]
+- **Repositorio:** https://github.com/mamuou24/ecommers-proyecto.git
+
+
 # 🛍️ Reto Desarrollador Fullstack
 
 Reto para practicar las habilidades de un desarrollador fullstack moderno.
