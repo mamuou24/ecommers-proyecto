@@ -2,7 +2,7 @@ import React from 'react';
 import { products } from '../mockdata/products';
 import ProductCard from '../components/molecules/ProductCard';
 
-// Componente principal de la página de inicio, que muestra una cuadrícula de productos utilizando el componente ProductCard para cada uno. La cuadrícula es responsiva, adaptándose a diferentes tamaños de pantalla para una experiencia óptima en dispositivos móviles, tabletas y computadoras de escritorio.
+//Componente principal de la página de inicio, que muestra una cuadrícula de productos utilizando el componente ProductCard para cada uno. La cuadrícula es responsiva, adaptándose a diferentes tamaños de pantalla para una experiencia óptima en dispositivos móviles, tabletas y computadoras de escritorio.
 
 const Home = () => {
   return (
