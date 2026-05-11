@@ -1,6 +1,9 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import './index.css' // Asegúrate de importar tus estilos de Tailwind aquí
+
+// Importamos tus componentes
 import Layout from "./components/templates/Layout"
 import Gallery from "./components/organisms/gallery/Gallery"
 import Login from "./components/organisms/login/Login"
@@ -15,6 +18,7 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
+          {/* Al entrar a "/", redirige automáticamente a la galería */}
           <Route index element={<Navigate to="/gallery" replace />} />
           <Route path="gallery" element={<Gallery />} />
           <Route path="login" element={<Login />} />
