@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom'; // Para la navegación SPA [cite: 11, 74]
-import { useCartStore } from '../../store/useCartStore';
+import { useCartStore } from "../../../store/useCartStore";
 
 const Navbar = () => {
   // Obtenemos el array del carrito del store

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getProductById } from '../../../services/productService';
 import { imageMap } from '../../../assets/imageMap';
-import useCartStore from '../../../store/cartStore';
+import { useCartStore } from "../../../store/useCartStore";
 
 export default function ProductDetail() {
     const { id } = useParams();

@@ -1,9 +1,6 @@
-import { Outlet } from 'react-router-dom';
-import NavBar from '../organisms/NavBar/NavBar';
-
 import React from 'react'
 import { Outlet } from 'react-router-dom'
-import Navbar from '../organisms/Navbar' // La ubicación del Navbar que hicimos
+import Navbar from "../organisms/NavBar/NavBar"; // La ubicación del Navbar que hicimos
 
 const Layout = () => {
   return (
