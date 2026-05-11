@@ -1,105 +1,98 @@
-import { Link } from "react-router-dom";
-import useCartStore from "../../../store/cartStore";
-import { imageMap } from "../../../assets/imageMap";
+import React from 'react';
+import { useCartStore } from '../../../store/useCartStore';
+import { Link } from 'react-router-dom';
 
-export default function Cart() {
-  // TODO ESTUDIANTE: agregar cupones, envio y resumen con impuestos.
-  const items = useCartStore((state) => state.items);
-  const incrementItem = useCartStore((state) => state.incrementItem);
-  const decrementItem = useCartStore((state) => state.decrementItem);
-  const removeItem = useCartStore((state) => state.removeItem);
-  const getTotalPrice = useCartStore((state) => state.getTotalPrice);
+const Cart = () => {
+  const { cart, removeFromCart, updateQuantity, getTotalPrice, clearCart } = useCartStore();
 
-  const total = getTotalPrice();
+  const formatter = new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    minimumFractionDigits: 0
+  });
 
-  if (items.length === 0) {
+  if (cart.length === 0) {
     return (
-      <section className="max-w-4xl mx-auto px-4 py-12">
-        <div className="bg-white rounded-2xl border border-gray-200 p-10 text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Tu carrito esta vacio</h2>
-          <p className="text-gray-500 mb-6">
-            Agrega productos desde la galeria para iniciar la compra.
-          </p>
-          <Link
-            to="/gallery"
-            className="inline-flex px-6 py-3 rounded-lg bg-purple-600 text-white font-medium hover:opacity-90"
-          >
-            Ir a productos
-          </Link>
-        </div>
-      </section>
+      <div className="text-center py-20">
+        <h2 className="text-2xl font-bold text-gray-700">Tu carrito está vacío 🍎</h2>
+        <p className="text-gray-500 my-4">¿Qué tal si agregas unos antojos tropicales?</p>
+        <Link to="/gallery" className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">
+          Ir a la Galería
+        </Link>
+      </div>
     );
   }
 
   return (
-    <section className="max-w-6xl mx-auto px-4 py-8">
-      <h2 className="text-3xl font-bold text-gray-900 mb-6">Carrito de compras</h2>
-      <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6">
-        <div className="bg-white rounded-2xl border border-gray-200 divide-y divide-gray-100">
-          {items.map(({ product, quantity }) => {
-            const resolvedImage = imageMap[product.image] ?? product.image;
-            const itemSubtotal = Number(product.price) * Number(quantity);
-            return (
-              <article key={product.id} className="p-4 flex gap-4 items-center">
-                <img
-                  src={resolvedImage}
-                  alt={product.title}
-                  className="w-20 h-20 object-cover rounded-lg border border-gray-200"
-                />
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-gray-900 truncate">{product.title}</h3>
-                  <p className="text-sm text-gray-500">${Number(product.price).toFixed(2)} c/u</p>
-                  <p className="text-sm font-semibold text-gray-800 mt-1">
-                    Subtotal: ${itemSubtotal.toFixed(2)}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => decrementItem(product.id)}
-                    className="w-8 h-8 rounded-lg border border-gray-300 hover:bg-gray-50"
-                  >
-                    -
-                  </button>
-                  <span className="w-8 text-center text-sm font-semibold">{quantity}</span>
-                  <button
-                    type="button"
-                    onClick={() => incrementItem(product.id)}
-                    className="w-8 h-8 rounded-lg border border-gray-300 hover:bg-gray-50"
-                  >
-                    +
-                  </button>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => removeItem(product.id)}
-                  className="text-sm text-red-600 hover:text-red-700"
-                >
-                  Quitar
-                </button>
-              </article>
-            );
-          })}
-        </div>
+    <div className="max-w-4xl mx-auto p-4">
+      <h2 className="text-3xl font-bold text-green-900 mb-8 border-b pb-4">Tu Carrito de Compras</h2>
+      
+      <div className="space-y-4">
+        {cart.map((item) => (
+          <div key={item.id} className="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border">
+            <div className="flex items-center gap-4">
+              <img src={item.image} alt={item.title} className="w-20 h-20 object-cover rounded-md" />
+              <div>
+                <h3 className="font-bold text-gray-800">{item.title}</h3>
+                <p className="text-sm text-gray-500">{formatter.format(item.price)} c/u</p>
+              </div>
+            </div>
 
-        <aside className="bg-white rounded-2xl border border-gray-200 p-6 h-fit">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">Resumen</h3>
-          <div className="flex justify-between text-gray-600 mb-3">
-            <span>Productos</span>
-            <span>{items.length}</span>
+            <div className="flex items-center gap-6">
+              {/* Controles de cantidad */}
+              <div className="flex items-center border rounded-lg">
+                <button 
+                  onClick={() => updateQuantity(item.id, -1)}
+                  className="px-3 py-1 hover:bg-gray-100 text-xl font-bold"
+                >-</button>
+                <span className="px-3 font-medium">{item.quantity}</span>
+                <button 
+                  onClick={() => updateQuantity(item.id, 1)}
+                  className="px-3 py-1 hover:bg-gray-100 text-xl font-bold"
+                >+</button>
+              </div>
+
+              {/* Precio Subtotal */}
+              <span className="font-bold text-green-700 min-w-[100px] text-right">
+                {formatter.format(item.price * item.quantity)}
+              </span>
+
+              {/* Botón eliminar */}
+              <button 
+                onClick={() => removeFromCart(item.id)}
+                className="text-red-500 hover:text-red-700 text-xl"
+              >
+                🗑️
+              </button>
+            </div>
           </div>
-          <div className="flex justify-between text-lg font-bold text-gray-900 mb-6">
-            <span>Total</span>
-            <span>${total.toFixed(2)}</span>
-          </div>
-          <Link
-            to="/checkout"
-            className="w-full inline-flex justify-center px-4 py-3 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold hover:opacity-90"
-          >
-            Ir a checkout
-          </Link>
-        </aside>
+        ))}
       </div>
-    </section>
+
+      {/* Resumen Final */}
+      <div className="mt-10 bg-green-50 p-6 rounded-2xl border-2 border-green-100">
+        <div className="flex justify-between items-center text-xl font-bold text-green-900">
+          <span>Total a pagar:</span>
+          <span className="text-2xl text-orange-600">{formatter.format(getTotalPrice())}</span>
+        </div>
+        
+        <div className="flex gap-4 mt-6">
+          <button 
+            onClick={clearCart}
+            className="flex-1 border border-red-500 text-red-500 py-3 rounded-xl hover:bg-red-50 transition font-semibold"
+          >
+            Vaciar Carrito
+          </button>
+          <Link 
+            to="/checkout"
+            className="flex-1 bg-green-600 text-white py-3 rounded-xl hover:bg-green-700 transition font-semibold text-center"
+          >
+            Finalizar Compra
+          </Link>
+        </div>
+      </div>
+    </div>
   );
-}
+};
+
+export default Cart;
