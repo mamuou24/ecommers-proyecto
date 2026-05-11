@@ -1,128 +1,39 @@
-import { Link, useLocation } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { subscribeToAuthChanges } from '../../../services/authService';
-import useCartStore from '../../../store/cartStore';
+import React from 'react';
+import { Link } from 'react-router-dom'; // Para la navegación SPA [cite: 11, 74]
+import { useCartStore } from '../../store/useCartStore';
 
-export default function NavBar() {
-  const location = useLocation();
-  const [loggedInUser, setLoggedInUser] = useState(null);
-  const totalItems = useCartStore((state) => state.getTotalItems());
-
-  useEffect(() => {
-    /*
-      // BACKUP: OLD LOCALSTORAGE METHOD
-      // const user = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
-      // setLoggedInUser(user);
-    */
-    const unsubscribe = subscribeToAuthChanges((currentUser) => {
-      setLoggedInUser(currentUser);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  const isActive = (path) => location.pathname === path;
-
-  /*
-    // BACKUP: OLD LOCALSTORAGE METHOD
-    // const handleLogout = () => {
-    //   localStorage.removeItem('loggedInUser');
-    //   setLoggedInUser(null);
-    //   navigate('/login');
-    // };
-  */
+const Navbar = () => {
+  // Obtenemos el array del carrito del store
+  const cart = useCartStore((state) => state.cart);
+  
+  // Calculamos el total de items (sumando las cantidades)
+  const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
-    <nav className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <Link 
-            to="/" 
-            className="flex items-center space-x-2 text-2xl font-bold hover:opacity-80 transition-opacity"
-          >
-            <span className="bg-gradient-to-r from-purple-500 via-purple-600 to-pink-500 bg-clip-text text-transparent">
-              MyStore
-            </span>
-          </Link>
+    <nav className="bg-green-700 text-white shadow-lg sticky top-0 z-50">
+      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+        {/* Logo / Nombre */}
+        <Link to="/" className="text-2xl font-bold tracking-tighter flex items-center gap-2">
+          <span>🍍</span> Antojos Tropicales
+        </Link>
 
-          {/* Navigation Links */}
-          <ul className="hidden md:flex items-center space-x-8">
-            <li>
-              <Link
-                to="/gallery"
-                className={`text-base font-medium transition-all duration-300 pb-2 border-b-2 ${
-                  isActive('/gallery')
-                    ? 'text-blue-600 border-blue-600'
-                    : 'text-gray-600 border-transparent hover:text-gray-900 hover:border-gray-300'
-                }`}
-              >
-                Gallery
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/cart"
-                className={`text-base font-medium transition-all duration-300 pb-2 border-b-2 ${
-                  isActive('/cart')
-                    ? 'text-blue-600 border-blue-600'
-                    : 'text-gray-600 border-transparent hover:text-gray-900 hover:border-gray-300'
-                }`}
-              >
-                Cart ({totalItems})
-              </Link>
-            </li>
-            {loggedInUser ? (
-              <li>
-                <Link
-                  to="/profile"
-                  className={`text-base font-medium transition-all duration-300 pb-2 border-b-2 ${
-                    isActive('/profile')
-                      ? 'text-blue-600 border-blue-600'
-                      : 'text-gray-600 border-transparent hover:text-gray-900 hover:border-gray-300'
-                  }`}
-                >
-                  Profile
-                </Link>
-              </li>
-            ) : (
-              <>
-                <li>
-                  <Link
-                    to="/login"
-                    className={`text-base font-medium transition-all duration-300 pb-2 border-b-2 ${
-                      isActive('/login')
-                        ? 'text-blue-600 border-blue-600'
-                        : 'text-gray-600 border-transparent hover:text-gray-900 hover:border-gray-300'
-                    }`}
-                  >
-                    Login
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/register"
-                    className={`text-base font-medium transition-all duration-300 pb-2 border-b-2 ${
-                      isActive('/register')
-                        ? 'text-blue-600 border-blue-600'
-                        : 'text-gray-600 border-transparent hover:text-gray-900 hover:border-gray-300'
-                    }`}
-                  >
-                    Register
-                  </Link>
-                </li>
-              </>
+        {/* Links y Carrito */}
+        <div className="flex items-center gap-6">
+          <Link to="/" className="hover:text-orange-300 transition-colors">Inicio</Link>
+          
+          {/* Botón del Carrito con Contador */}
+          <Link to="/cart" className="relative p-2 bg-green-800 rounded-full hover:bg-green-900 transition-colors">
+            <span className="text-xl">🛒</span>
+            {totalItems > 0 && (
+              <span className="absolute -top-1 -right-1 bg-orange-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center border-2 border-green-700">
+                {totalItems}
+              </span>
             )}
-          </ul>
-
-          {/* Mobile Menu Button (opcional para futuro) */}
-          <button className="md:hidden p-2 rounded-md text-gray-600 hover:bg-gray-50">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
+          </Link>
         </div>
       </div>
     </nav>
   );
-}
+};
+
+export default Navbar;
