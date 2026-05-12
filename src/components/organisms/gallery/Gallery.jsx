@@ -111,7 +111,7 @@ const Gallery = () => {
             disabled={currentPage === totalPages}
             style={{ padding: '10px 25px', borderRadius: '25px', border: '2px solid #16a34a', background: 'transparent', color: '#16a34a', fontWeight: 'bold', cursor: 'pointer', opacity: currentPage === totalPages ? 0.3 : 1 }}
           >
-            Siguiente
+             Siguiente
           </button>
         </div>
       )}
