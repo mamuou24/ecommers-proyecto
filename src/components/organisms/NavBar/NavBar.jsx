@@ -1,36 +1,56 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // Para la navegación SPA [cite: 11, 74]
-import { useCartStore } from "../../../store/useCartStore";
+import { Link } from 'react-router-dom';
+import { useCartStore } from '../../../store/useCartStore';
 
 const Navbar = () => {
-  // Obtenemos el array del carrito del store
-  const cart = useCartStore((state) => state.cart);
-  
-  // Calculamos el total de items (sumando las cantidades)
+  const { cart, searchQuery, setSearchQuery } = useCartStore();
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
 
-  return (
-    <nav className="bg-green-700 text-white shadow-lg sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        {/* Logo / Nombre */}
-        <Link to="/" className="text-2xl font-bold tracking-tighter flex items-center gap-2">
-          <span>🍍</span> Antojos Tropicales
-        </Link>
+  // Estilos manuales para asegurar que no se vean como links azules
+  const navStyle = {
+    backgroundColor: '#15803d', // Verde esmeralda
+    padding: '15px 20px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    color: 'white',
+    boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
+  };
 
-        {/* Links y Carrito */}
-        <div className="flex items-center gap-6">
-          <Link to="/" className="hover:text-orange-300 transition-colors">Inicio</Link>
-          
-          {/* Botón del Carrito con Contador */}
-          <Link to="/cart" className="relative p-2 bg-green-800 rounded-full hover:bg-green-900 transition-colors">
-            <span className="text-xl">🛒</span>
-            {totalItems > 0 && (
-              <span className="absolute -top-1 -right-1 bg-orange-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center border-2 border-green-700">
-                {totalItems}
-              </span>
-            )}
-          </Link>
-        </div>
+  const linkStyle = {
+    color: 'white',
+    textDecoration: 'none',
+    fontWeight: 'bold',
+    marginLeft: '20px',
+    fontSize: '1rem'
+  };
+
+  const badgeStyle = {
+    backgroundColor: '#f97316',
+    borderRadius: '50%',
+    padding: '2px 8px',
+    fontSize: '0.8rem',
+    marginLeft: '5px'
+  };
+
+  return (
+    <nav style={navStyle}>
+      <Link to="/" style={{ ...linkStyle, fontSize: '1.5rem', marginLeft: 0 }}>
+        🍍 Antojos Tropicales
+      </Link>
+
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <input 
+          type="text" 
+          placeholder="Buscar fruta..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          style={{ padding: '8px', borderRadius: '20px', border: 'none', marginRight: '20px' }}
+        />
+        <Link to="/gallery" style={linkStyle}>Galería</Link>
+        <Link to="/cart" style={linkStyle}>
+          🛒 Carrito <span style={badgeStyle}>{totalItems}</span>
+        </Link>
       </div>
     </nav>
   );

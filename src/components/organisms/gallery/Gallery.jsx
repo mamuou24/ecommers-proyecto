@@ -1,94 +1,115 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { products } from '../../../mockdata/products';
 import ProductCard from '../../molecules/ProductCard';
 import { useCartStore } from '../../../store/useCartStore';
 
 const Gallery = () => {
-  // 1. Acceder al estado global de búsqueda desde Zustand [cite: 110, 121]
   const searchQuery = useCartStore((state) => state.searchQuery);
-
-  // 2. Lógica de Filtrado en tiempo real [cite: 26, 31, 161]
+  
+  // Filtrado de productos basado en la búsqueda
   const filteredProducts = useMemo(() => {
     return products.filter((product) =>
-      product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchQuery.toLowerCase())
+      product.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [searchQuery]);
 
-  // 3. Lógica de Paginación (6-8 por página según la guía) [cite: 25, 162-163]
+  // Configuración de Paginación
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8; 
+  const itemsPerPage = 6; 
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-  
-  const lastIndex = currentPage * itemsPerPage;
-  const firstIndex = lastIndex - itemsPerPage;
-  const currentItems = filteredProducts.slice(firstIndex, lastIndex);
+  const currentItems = filteredProducts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-  // Reiniciar a la página 1 si el usuario busca algo nuevo
-  React.useEffect(() => {
+  useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery]);
 
+  // --- ESTILOS DEL BANNER ---
+  const bannerStyle = {
+    width: '100%',
+    height: '350px',
+    // Imagen de fondo profesional con overlay oscuro para que el texto resalte
+    backgroundImage: 'linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("https://images.unsplash.com/photo-1610832958506-aa56368176cf?q=80&w=2000&auto=format&fit=crop")',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'white',
+    borderRadius: '20px',
+    marginBottom: '40px',
+    textAlign: 'center',
+    boxShadow: '0 10px 20px rgba(0,0,0,0.1)'
+  };
+
   return (
-    <section className="animate-fadeIn">
-      <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-        <div>
-          <h2 className="text-3xl font-extrabold text-green-900">Nuestra Cosecha</h2>
-          <p className="text-gray-600">Fruta fresca seleccionada para ti</p>
-        </div>
-        
-        {/* Contador de resultados */}
-        <span className="bg-orange-100 text-orange-700 px-4 py-1 rounded-full text-sm font-medium">
-          {filteredProducts.length} productos encontrados
-        </span>
+    <section style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
+      
+      {/* 1. BANNER ATRACTIVO */}
+      <div style={bannerStyle}>
+        <h1 style={{ fontSize: '3.5rem', fontWeight: '900', margin: '0', textShadow: '2px 2px 4px rgba(0,0,0,0.5)' }}>
+          ¡Fruta Fresca en tu Puerta!
+        </h1>
+        <p style={{ fontSize: '1.4rem', marginTop: '10px', fontWeight: '300' }}>
+          Seleccionamos lo mejor del campo colombiano para tu mesa.
+        </p>
+        <button style={{ 
+          marginTop: '20px', 
+          padding: '12px 30px', 
+          backgroundColor: '#16a34a', 
+          color: 'white', 
+          border: 'none', 
+          borderRadius: '30px', 
+          fontWeight: 'bold', 
+          cursor: 'pointer',
+          fontSize: '1rem'
+        }}>
+          Ver Ofertas de Hoy
+        </button>
       </div>
 
-      {/* 4. Grid de Productos [cite: 157] */}
+      {/* 2. TÍTULO Y CONTEO */}
+      <div style={{ marginBottom: '30px' }}>
+        <h2 style={{ fontSize: '2.2rem', fontWeight: 'bold', color: '#14532d', margin: '0' }}>
+          Nuestra Cosecha
+        </h2>
+        <p style={{ color: '#666', fontSize: '1.1rem' }}>
+          {filteredProducts.length} deliciosos productos encontrados para ti.
+        </p>
+      </div>
+
+      {/* 3. GRID DE 3 COLUMNAS (Con respaldo CSS) */}
       {currentItems.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', 
+          gap: '35px' 
+        }}>
           {currentItems.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
       ) : (
-        <div className="text-center py-20 bg-white rounded-xl shadow-inner">
-          <span className="text-5xl mb-4 block">🍋‍🟩</span>
-          <h3 className="text-xl font-semibold text-gray-700">¡Ups! No encontramos ese antojo</h3>
-          <p className="text-gray-500">Prueba con otra fruta o ingrediente.</p>
+        <div style={{ textAlign: 'center', padding: '50px' }}>
+          <p style={{ fontSize: '1.5rem', color: '#999' }}>No encontramos la fruta que buscas...</p>
         </div>
       )}
 
-      {/* 5. Controles de Paginación [cite: 204] */}
+      {/* 4. PAGINACIÓN */}
       {totalPages > 1 && (
-        <div className="flex justify-center items-center mt-12 gap-2">
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '50px', gap: '20px' }}>
           <button
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className="px-4 py-2 border rounded-lg hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            style={{ padding: '10px 25px', borderRadius: '25px', border: '2px solid #16a34a', background: 'transparent', color: '#16a34a', fontWeight: 'bold', cursor: 'pointer', opacity: currentPage === 1 ? 0.3 : 1 }}
           >
             Anterior
           </button>
-          
-          <div className="flex gap-1">
-            {[...Array(totalPages)].map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrentPage(i + 1)}
-                className={`w-10 h-10 rounded-lg font-bold transition-all ${
-                  currentPage === i + 1 
-                  ? 'bg-green-600 text-white shadow-md' 
-                  : 'hover:bg-green-50 text-green-700'
-                }`}
-              >
-                {i + 1}
-              </button>
-            ))}
-          </div>
-
+          <span style={{ fontWeight: 'bold' }}>Página {currentPage} de {totalPages}</span>
           <button
             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
-            className="px-4 py-2 border rounded-lg hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            style={{ padding: '10px 25px', borderRadius: '25px', border: '2px solid #16a34a', background: 'transparent', color: '#16a34a', fontWeight: 'bold', cursor: 'pointer', opacity: currentPage === totalPages ? 0.3 : 1 }}
           >
             Siguiente
           </button>

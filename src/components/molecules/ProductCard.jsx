@@ -1,27 +1,43 @@
-//Mostrar la información de cada producto en una tarjeta atractiva, con imagen, título, descripción y precio formateado en pesos colombianos. Además, incluir un botón para añadir el producto al carrito de compras.
 import React from 'react';
-import { useCartStore } from '../../store/useCartStore'; // Importar el store
+import { useCartStore } from '../../store/useCartStore';
 
 const ProductCard = ({ product }) => {
-  const addToCart = useCartStore((state) => state.addToCart); // Obtener la función
-
-  const formatter = new Intl.NumberFormat('es-CO', {
-    style: 'currency',
-    currency: 'COP',
-    minimumFractionDigits: 0
-  });
+  const addToCart = useCartStore((state) => state.addToCart);
 
   return (
-    <div className="border rounded-lg shadow-md overflow-hidden bg-white">
-      <img src={product.image} alt={product.title} className="w-full h-48 object-cover" />
-      <div className="p-4">
-        <h3 className="text-lg font-bold text-green-800">{product.title}</h3>
-        <p className="text-sm text-gray-600 mb-4 line-clamp-2">{product.description}</p>
-        <div className="flex justify-between items-center">
-          <span className="text-xl font-semibold text-orange-600">{formatter.format(product.price)}</span>
+    <div style={{ 
+      border: '1px solid #ddd', 
+      borderRadius: '12px', 
+      overflow: 'hidden', 
+      display: 'flex', 
+      flexDirection: 'column',
+      background: 'white'
+    }}>
+      {/* IMAGEN CONTROLADA */}
+      <div style={{ width: '100%', height: '200px', overflow: 'hidden' }}>
+        <img 
+          src={product.image} 
+          alt={product.title} 
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+        />
+      </div>
+      
+      <div style={{ padding: '15px' }}>
+        <h3 style={{ margin: '0 0 10px 0', fontSize: '1.2rem' }}>{product.title}</h3>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontWeight: 'bold', color: '#ea580c', fontSize: '1.2rem' }}>
+            ${product.price.toLocaleString()}
+          </span>
           <button 
-            onClick={() => addToCart(product)} // Llamada real al store
-            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md"
+            onClick={() => addToCart(product)}
+            style={{ 
+              background: '#16a34a', 
+              color: 'white', 
+              border: 'none', 
+              padding: '8px 15px', 
+              borderRadius: '6px',
+              cursor: 'pointer'
+            }}
           >
             Añadir
           </button>
