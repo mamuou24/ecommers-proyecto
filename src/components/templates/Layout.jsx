@@ -15,7 +15,7 @@ const Layout = () => {
 
       {/* Aquí podrías agregar un Footer más tarde */}
       <footer className="bg-gray-800 text-white p-4 text-center">
-        <p>&copy; 2026 Antojos Tropicales - Proyecto E-commerce</p>
+        <p>&copy; 2026 Antojo Tropical - Proyecto E-commerce</p>
       </footer>
     </div>
   )
