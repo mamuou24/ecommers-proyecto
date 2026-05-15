@@ -17,7 +17,7 @@ export const products = [
   },
   {
     id: 3,
-    title: "Mix Vitalidad Verde",
+    title: "Mix la combi perfecta",
     description: "Mango, piña y manzana verde seleccionada. Una explosión de frescura y vitamina C.",
     price: 11800,
     image: "/images/mango-piña-manzana verde.jpeg",
