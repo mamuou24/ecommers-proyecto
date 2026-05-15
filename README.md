@@ -2,7 +2,7 @@
 
 ### Información Personal y del Proyecto
 - **Autor:** [Manuela Ortega Usuga]
-- **Repositorio:** https://github.com/mamuou24/ecommers-proyecto.git
+- **Repositorio:** https://github.com/mamuou24/ecommers-proyecto
 
 
 # 🛍️ Reto Desarrollador Fullstack
