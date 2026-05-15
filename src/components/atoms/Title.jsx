@@ -1,4 +1,5 @@
 // Un componente de React funcional y moderno que usa Tailwind CSS v4.0
+
 function Title({ title }) {
   return (
     // Contenedor principal para centrar el contenido en la página
