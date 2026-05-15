@@ -1,7 +1,7 @@
 export const products = [
   {
     id: 1,
-    title: "Mix Guayaba y Mango",
+    title: "Mix frutos verdes",
     description: "Una mezcla tropical de guayaba verde, mango fresco y manzana verde. Balance perfecto entre dulce y ácido.",
     price: 12500,
     image: "/images/guayaba verde-mango-manzana verde.jpeg",
