@@ -14,6 +14,7 @@ const Gallery = () => {
   }, [searchQuery]);
 
   // Configuración de Paginación
+  
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6; 
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
