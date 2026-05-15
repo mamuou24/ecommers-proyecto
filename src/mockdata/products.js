@@ -10,7 +10,7 @@ export const products = [
   {
     id: 2,
     title: "Trío Dulce Tropicitrico",
-    description: "Mango dulce premium acompañado de maracuyá y piña madura. Ideal para jugos o snacks.",
+    description: "Mango dulce premium acompañado de maracuyá y piña madura. Ideal con limon y sal.",
     price: 13000,
     image: "/images/mango dulce-maracuya-piña.jpeg",
     category: "Mixes"
